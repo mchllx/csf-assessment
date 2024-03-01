@@ -3,7 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Cart, LineItem, Product} from '../models';
 import { ProductService } from '../product.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { CartStore } from '../cart.store';
 
 @Component({
   selector: 'app-order-form',
@@ -14,17 +15,20 @@ export class OrderFormComponent implements OnInit {
 
   private prodSvc = inject(ProductService)
   private activatedRoute = inject(ActivatedRoute)
+  private store = inject(CartStore)
+  private fb = inject(FormBuilder)
 
   constructor(){ 
   }
 
   // NOTE: you are free to modify this component
-  private fb = inject(FormBuilder)
 
   product!: Product
   lineItem!: LineItem
   finalLineItems: LineItem[] = []
   cart: Cart[] = []
+
+  lineItems$!: Observable<LineItem[] | undefined>
 
   @Input({ required: true })
   productId!: string
@@ -67,9 +71,11 @@ export class OrderFormComponent implements OnInit {
       price: this.lineItems[0].price
     }
 
-    // console.info('>>>final lineitem', this.lineItem)
+    console.info('>>>final lineitem', this.lineItem)
 
     this.finalLineItems.push(this.lineItem)
+
+    this.store.addToCart(this.finalLineItems)
 
     let cart: Cart[] = [{
         lineItems: this.finalLineItems
@@ -81,22 +87,11 @@ export class OrderFormComponent implements OnInit {
     this.form = this.createForm()
   }
 
-  updateCart(lineItems: LineItem[]) {
-    console.log('check')
-    lineItems = this.finalLineItems
+  // updateCart(lineItems: LineItem[]) {
+  //   console.log('check')
+  //   lineItems = this.finalLineItems
     
-  }
-
-
-  // console.info('>>>final lineitems', this.finalLineItems)
-
-  // let cart: Cart = {
-  //   lineItems: this.finalLineItems
   // }
-
-  // this.cart = cart
-  // console.info('>>>added to cart', this.cart)
-
 
   private createForm(): FormGroup {
     return this.fb.group({

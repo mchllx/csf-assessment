@@ -58,17 +58,21 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <div *ngFor="let li of cart.lineItems, index as i">
-        <td> {{li.name}} </td>
-        <td> {{li.price}} </td>
-        <td> {{li.quantity}} </td>
-      </div>
+    <tr *ngFor="let li of lineItems$ | async, index as i">
+        <td>{{li.name}}</td>
+        <td>{{li.price}}</td>
+        <td>{{li.quantity}}</td>
     </tr>
   </tbody>
   <tfoot>
     <td></td>
-    <td>Total: </td>
+    <td> Total: </td>
     <td> 100 </td>
   </tfoot>
 </table>
+<!-- 
+<div *ngFor="let li of cart.lineItems, index as i">
+  <td> {{li.name}} </td>
+  <td> {{li.price}} </td>
+  <td> {{li.quantity}} </td>
+</div> -->

@@ -16,6 +16,7 @@
         </div>
       </div>
       <div class="order-form">
+        <!-- <app-order-form [productId]="p.prodId" [lineItems]="lineItems"/> -->
         <app-order-form (newSubmit)="newLineItem($event)" [productId]="p.prodId" [lineItems]="lineItems"/>
       </div>
     </div>

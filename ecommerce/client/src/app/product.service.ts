@@ -3,6 +3,10 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, lastValueFrom} from "rxjs";
 import {Order, Product} from "./models";
 
+import { environment } from '../environments/environment'
+
+const URL = environment.url
+
 @Injectable()
 export class ProductService {
 
@@ -31,6 +35,6 @@ export class ProductService {
   checkout(order: Order): Promise<Order> {
     // TODO Task 3
 
-    return lastValueFrom(this.http.post<Order>(`${URL}/api/order/`, {order}))
+    return lastValueFrom(this.http.post<Order>(`${URL}/api/order`, {order}))
   }
 }

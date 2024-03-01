@@ -3,6 +3,7 @@ import {Observable, Subject, of, switchMap, tap} from 'rxjs';
 import {Cart, LineItem, Product} from '../models';
 import {ProductService} from '../product.service';
 import {ActivatedRoute} from '@angular/router';
+import { CartStore } from '../cart.store';
 
 @Component({
   selector: 'app-category',
@@ -15,6 +16,7 @@ export class CategoryComponent implements OnInit {
 
   private prodSvc = inject(ProductService)
   private activatedRoute = inject(ActivatedRoute)
+  private store = inject(CartStore)
 
   category: string = "not set"
 
@@ -27,8 +29,10 @@ export class CategoryComponent implements OnInit {
   // lineItem!: LineItem
   lineItems: LineItem[] = []
 
+  lineItems$!: Observable<LineItem[] | undefined>
+
   @Output()
-  sendLineItem = new Subject<LineItem>()
+  sendLineItem = new Subject<LineItem[]>()
 
   constructor(){ 
   }
@@ -48,18 +52,18 @@ export class CategoryComponent implements OnInit {
           for (let index=0; index < value.length; index++) {
             const p = value[index]
 
-            console.info('>>>retrieving product', p)
+            // console.info('>>>retrieving product', p)
 
             this.products.push(p)
 
-            console.info('>>>retrieving data', this.products) 
+            // console.info('>>>retrieving data', this.products) 
           }
         }
         return of(value)
       }),
 
       tap(value => {
-        console.info('>>> value', value)
+        // console.info('>>> value', value)
       })
     )
   }
@@ -83,21 +87,10 @@ export class CategoryComponent implements OnInit {
 
         console.log('>>>adding lineitem to cart', lineItem)
         this.lineItem = lineItem
-
+        
         this.lineItems.push(lineItem)
-        this.sendLineItem.next(lineItem)
-
+        console.log('>>>adding to lineitems', this.lineItems)
       }
-      
     }
-
-    // this.newLineItem.next(lineItem)
-
-    // this.lineItems.push(lineItem)
-    
-    // let cart: Cart = {
-    //   lineItems: this.lineItems  
-    // }
-    }
-    
   }
+}

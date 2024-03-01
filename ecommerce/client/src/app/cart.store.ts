@@ -5,30 +5,40 @@ import {ComponentStore} from "@ngrx/component-store";
 
 import {Cart, LineItem, Product} from "./models";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
+        
 export class CartStore extends ComponentStore<Cart> {
 
-    product!: Product
-    cart: Cart = {
-        lineItems: []
-    }
-
-    constructor(cart: Cart) {
-        super(cart)
-        this.cart = cart
-    }
-
-    // upon successfully add, item count increases
-    // readonly product$ = this.select<Product>(
-    //     (product) => ({ ...product } as Product)
-    // )
-
-    // readonly product$ = this.updater<Product> {
-    //     (product) => ({ ...product} as Product)
+    // private INIT_STATE: Cart = {
+    //     lineItems: []
     // }
 
-     // sent to SB after checkout
-    
-    
+    cart!: Cart[]
+
+    constructor() {
+        super(
+            {lineItems: []}
+        )
+    }
+
+    // readonly lineItems$: Observable<LineItem[]> = this.select(state => state.lineItems);
+
+    readonly getAllItems = this.select<LineItem[]>(
+        (slice: Cart) => slice.lineItems
+        )
+
+    readonly getItemCount = this.select<number>(
+    (slice: Cart) => slice.lineItems.length
+    )
+
+    public readonly addToCart = this.updater<LineItem[]>(
+            (slice: Cart, lineItems: LineItem[]) => 
+            ({
+            ...slice, lineItems,
+      }));
 
 }
+
+    

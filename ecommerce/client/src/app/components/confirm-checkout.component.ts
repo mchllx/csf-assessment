@@ -3,6 +3,8 @@ import { ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LineItem, Cart, Order } from '../models';
+import { Observable, of, switchMap, tap } from 'rxjs';
+import { CartStore } from '../cart.store';
 
 @Component({
   selector: 'app-confirm-checkout',
@@ -17,8 +19,11 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
   private prodSvc = inject(ProductService)
   private activatedRoute = inject(ActivatedRoute)
   private router = inject(Router)
+  private store = inject(CartStore)
 
   form!: FormGroup
+
+  lineItems$!: Observable<LineItem[] | undefined>
 
   order$!: Promise<void | undefined >
 
@@ -29,8 +34,31 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
   constructor() {
   }
 
-
   ngOnInit(): void {
+    this.lineItems$ = this.store.getAllItems.pipe(
+        switchMap((value: LineItem[]) => {
+  
+          if (value === undefined ) {
+            return of(undefined)
+          } 
+            const li = value
+  
+            console.info('>>>retrieving value', value)
+            
+            let cart: Cart = {
+              lineItems: li
+            }
+
+            this.cart = cart
+  
+          return of(li) 
+        }),
+  
+        tap(value => {
+          console.info('>>> lineitem', value)
+        })
+      )
+
     this.form = this.createOrderForm()
   }
 
@@ -46,7 +74,6 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
       comments: this.fb.control<string>('', [Validators.maxLength(120)])
     })
   }
-
 
   // { name: 'name', address: 'address', priority: true, comments: 'text'}
   // name: string
@@ -66,7 +93,7 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
       address: this.form.value['address'],
       priority: this.form.value['priority'],
       comments: this.form.value['comments'],
-      cart: this.cart 
+      cart: this.cart
     }
 
     console.log('>>>sending to sb', this.order)

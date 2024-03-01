@@ -29,7 +29,7 @@ import vttp.batch4.csf.exceptions.PurchaseOrderException;
 
 @Controller
 @CrossOrigin(origins={"http://localhost:4200", "https://vttpb4-michelle-lim.up.railway.app", "http://localhost:8080"})
-@RequestMapping(path="api")
+@RequestMapping(path="/api")
 public class OrderController {
 
   @Autowired
@@ -60,7 +60,9 @@ public class OrderController {
         String comments = jsonObj.getString("comments");
 
          // cart: lineItems: [{}]
-        JsonArray cart = jsonObj.getJsonArray("cart");
+        JsonObject cart = jsonObj.getJsonObject("cart");
+        System.out.println("cart" + cart.toString());
+
 
         Order order = new Order();
 

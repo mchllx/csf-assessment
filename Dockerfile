@@ -19,21 +19,21 @@ FROM maven:3-eclipse-temurin-21 AS sb-builder
 
 WORKDIR /sbapp
 
-COPY backend/mvnw .
-COPY backend/mvnw.cmd .
-COPY backend/pom.xml .
-COPY backend/.mvn .mvn
-COPY backend/src src
-COPY --from=ng-builder /ngapp/dist/frontend/browser/ /sbapp/src/main/resources/static
+COPY ecommerce/mvnw .
+COPY ecommerce/mvnw.cmd .
+COPY ecommerce/pom.xml .
+COPY ecommerce/.mvn .mvn
+COPY ecommerce/src src
+COPY --from=ng-builder /ngapp/dist/client/browser/ /sbapp/src/main/resources/static
 
 RUN mvn package -e -Dmaven.test.skip=true
 
 FROM maven:3-eclipse-temurin-21
 WORKDIR /app
 
-COPY --from=sb-builder /sbapp/target/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=sb-builder /sbapp/target/ecommerce-0.0.1-SNAPSHOT.jar app.jar
 
-ENV SPRING_DATA_MONGODB_URI=mongodb://localhost:37928/shop
+ENV SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/shop
 ENV SPRING_REDIS_HOST=LOCALHOST SPRING_REDIS_PORT=6379
 ENV SPRING_REDIS_DATABASE=0
 ENV SPRING_REDIS_USERNAME=NOT_SET SPRING_REDIS_PASSWORD=NOT_SET APIKEY=NOT_SET
