@@ -1,0 +1,25 @@
+sudo npm install --save
+
+ng new day39workshop --standalone=false
+ng g c components/search --flat --skip-tests=true
+ng g m material/material //choose indigo-pink
+
+ng generate environments
+
+ng serve
+ng serve --configuration=development
+ng serve --configuration=production
+ng build
+
+sudo npm i dexie //indexeddb, install where package.json is
+sudo npm i -g http-server
+sudo npm i --save typeface-open-sans
+sudo npm i -g uuid
+npm install uuid --save
+ng add @ngrx/component-store@latest
+
+ng add @angular/material
+ng add hammerjs
+
+docker build -t username/container:v1.0.0 .
+docker container run -d -p 8080:8080 username/container:v1.0.0 .

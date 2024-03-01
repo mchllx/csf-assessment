@@ -1,0 +1,74 @@
+<h2>Checkout</h2>
+
+<form [formGroup]="form" (submit)="postOrder()">
+  <table>
+    <tr>
+      <td>Name: </td>
+      <td>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Username" size="30" formControlName="name">
+          <mat-error *ngIf="form.get('name')?.hasError('required')">Name is a required field</mat-error>
+          <mat-error *ngIf="form.get('name')?.hasError('minlength')">Username must be greater than 2 characters</mat-error>
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td>Address: </td>
+      <td>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Address" size="30" formControlName="address">
+          <mat-error *ngIf="form.get('address')?.hasError('required')">Address is a reuired field</mat-error>
+          <mat-error *ngIf="form.get('name')?.hasError('minlength')">Username must be greater than 3 characters</mat-error>
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td>Priority: </td>
+      <td>
+        <input type="checkbox" formControlName="priority">
+      </td>
+    </tr>
+    <tr>
+      <td>Comments: </td>
+      <td>
+
+        <mat-form-field>
+          <textarea matInput cols="30" rows="4" formControlName="comments"></textarea>
+          <mat-error *ngIf="form.get('comments')?.hasError('maxlength')">Text length must be lesser than 120 characters</mat-error>
+        </mat-form-field>  
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button type="submit" [disabled]="form.invalid || !form.dirty">Place Order</button>
+      </td>
+    </tr>
+  </table>
+</form>
+
+<hr>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <div *ngFor="let li of cart.lineItems, index as i">
+        <td> {{li.name}} </td>
+        <td> {{li.price}} </td>
+        <td> {{li.quantity}} </td>
+      </div>
+    </tr>
+  </tbody>
+  <tfoot>
+    <td></td>
+    <td>Total: </td>
+    <td> 100 </td>
+  </tfoot>
+</table>
