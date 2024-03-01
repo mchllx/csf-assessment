@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { ProductService } from '../product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LineItem, Cart, Order } from '../models';
 
@@ -16,6 +16,7 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
   private fb: FormBuilder = inject(FormBuilder)
   private prodSvc = inject(ProductService)
   private activatedRoute = inject(ActivatedRoute)
+  private router = inject(Router)
 
   form!: FormGroup
 
@@ -25,8 +26,7 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
   cart!: Cart
   order!: Order
   
-  constructor(){
-
+  constructor() {
   }
 
 
@@ -79,11 +79,14 @@ export class ConfirmCheckoutComponent implements OnInit, OnDestroy {
         alert(`successful: ${value.name}, ${value.cart}`);
 
         console.log('>>>ang: successful', value)
+
+        this.router.navigate(['/'])
       })
       .catch(
         error => {
           console.log('server error', error)
           alert('server error: failed to place order')
+          
         }
       )
     
